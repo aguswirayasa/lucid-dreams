@@ -1,15 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { setData, setError, RootState } from "../app/store/promptSlice";
-import { QueryClient, QueryClientProvider, useMutation } from "react-query";
+import { useDispatch } from "react-redux";
+import { setData, setError } from "../app/store/promptSlice";
+import { useMutation } from "react-query";
 
 type FormData = {
   prompt: string;
   negativePrompt: string;
 };
 
-const PromptForm = ({ startLoading, finishLoading }) => {
+const PromptForm = ({ startLoading, finishLoading }: any) => {
   const { register, handleSubmit } = useForm<FormData>();
   const dispatch = useDispatch();
 
@@ -33,7 +33,7 @@ const PromptForm = ({ startLoading, finishLoading }) => {
         dispatch(setData(responseData));
         dispatch(setError(null));
       },
-      onError: (error) => {
+      onError: (error: any) => {
         finishLoading();
         dispatch(setError(error.message));
       },

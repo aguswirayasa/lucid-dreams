@@ -1,6 +1,9 @@
 "use server";
-import { formatDistanceToNow } from "date-fns";
+
+import ShowcaseCard from "@/components/ShowcaseCard";
 import { firestore } from "../../../firebase/firebase";
+import Image from "next/image";
+import Link from "next/link";
 
 const Showcase = async () => {
   async function getAllPost() {
@@ -20,54 +23,36 @@ const Showcase = async () => {
   const posts = await getAllPost();
   console.log(posts);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {posts.map((post, i) => (
-        <div
-          key={i}
-          className="relative overflow-hidden rounded-md cursor-pointer group"
-        >
-          <img
-            src={post.imageUrl}
-            alt={post.username}
-            loading="lazy"
-            className="w-full h-auto transition-transform duration-300 transform hover:scale-105"
-          />
-
-          <div className="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-90 p-4 transition-transform duration-300 transform-gpu translate-y-full group-hover:translate-y-0">
-            <span className="flex justify-between items-center">
-              <h3 className="text-xl text-teal-500 font-bold mb-2">
-                {post.username}
-              </h3>
-              <p className="text-xs text-white/50 font-semibold">
-                {formatDistanceToNow(
-                  post.uploadedAt && post.uploadedAt.seconds
-                    ? post.uploadedAt.seconds * 1000
-                    : new Date(),
-                  { addSuffix: true }
-                )}
-              </p>
-            </span>
-            <ul>
-              <li className="border-b-2 border-teal-600  my-2">
-                <p className="text-sm text-white ">
-                  <span className="font-semibold">Model:</span> {post.model}
-                </p>
-              </li>
-              <li className="border-b-2 border-teal-600 my-2">
-                <p className="text-sm text-white font-semibold">Prompt: </p>
-                <p className="text-sm text-white">{post.prompt}</p>
-              </li>
-              <li className="border-b-2 border-teal-600 my-2">
-                <p className="text-sm text-white font-semibold">
-                  Negative Prompt:
-                </p>
-                <p className="text-sm text-white">{post.negativePrompt}</p>
-              </li>
-            </ul>
-          </div>
+    <section>
+      <div className="m-10 border-b-2 border-gray-800 py-3 flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-bold">Community Showcase</h1>
+          <p className="text-xl font-semibold text-teal-500 ">
+            Find out what other dreaming about!
+          </p>
         </div>
-      ))}
-    </div>
+        <Link href={"/playground"}>
+          <button className="px-3 py-2 border-2 border-teal-500  rounded-md hover:bg-teal-700 transition-colors duration-300 ease-in-out">
+            Manifest Your Dreams
+          </button>
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-10">
+        {posts.map((post, i) => (
+          <ShowcaseCard
+            post={{
+              imageUrl: post.imageUrl,
+              username: post.username,
+              model: post.model,
+              prompt: post.prompt,
+              negativePrompt: post.negativePrompt,
+              uploadedAt: post.uploadedAt,
+            }}
+            index={i}
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 

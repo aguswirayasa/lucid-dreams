@@ -6,7 +6,7 @@ const loading = () => {
           key={i}
           className="relative overflow-hidden rounded-md cursor-pointer group animate-pulse"
         >
-          <div className="bg-gray-300 h-40 w-full"></div>
+          <div className="bg-gray-300 h-96 w-full"></div>
 
           <div className="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-90 p-4 transition-transform duration-300 transform-gpu translate-y-full group-hover:translate-y-0">
             <span className="flex justify-between items-center">

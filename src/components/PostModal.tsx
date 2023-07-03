@@ -3,9 +3,15 @@ import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { convertToBase64, postImage } from "../../utils";
-import Loading from "./Loading";
 import PostToast from "./PostToast";
-const PostModal = ({ output, links, prompt, negativePrompt, model }) => {
+import { PostModalProps } from "../../types";
+const PostModal = ({
+  output,
+  links,
+  prompt,
+  negativePrompt,
+  model,
+}: PostModalProps) => {
   const [username, setUsername] = useState("");
   const [apiData, setApiData] = useState("");
   const [isLoading, setIsLoading] = useState(false);

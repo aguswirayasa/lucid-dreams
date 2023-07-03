@@ -1,8 +1,6 @@
 import React from "react";
 import { DiffussionResponse } from "../../types";
-
 import PostModal from "./PostModal";
-import PostToast from "./PostToast";
 
 interface ImageCardProps {
   image: DiffussionResponse;
