@@ -32,7 +32,10 @@ const Main = () => {
               </div>
             </>
           ) : (
-            <ImageCard image={data} />
+            <>
+              {error && <p>{error}</p>}
+              <ImageCard image={data} />
+            </>
           )}
         </div>
         <div className="lg:col-span-4 xl:border-s-2 border-teal-400 p-3 w-full">

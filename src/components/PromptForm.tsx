@@ -22,9 +22,6 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
         },
         body: JSON.stringify(data),
       }).then((response) => {
-        if (!response.ok) {
-          throw new Error("An error occurred while making the API request");
-        }
         return response.json();
       }),
     {
