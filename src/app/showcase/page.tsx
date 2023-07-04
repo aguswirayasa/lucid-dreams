@@ -2,9 +2,9 @@
 
 import ShowcaseCard from "@/components/ShowcaseCard";
 import { firestore } from "../../../firebase/firebase";
-import Image from "next/image";
 import Link from "next/link";
-
+import { format, formatDistanceToNow } from "date-fns";
+import { ShowcaseProps } from "../../../types";
 const Showcase = async () => {
   async function getAllPost() {
     "use server";
@@ -21,7 +21,20 @@ const Showcase = async () => {
     return userImages;
   }
   const posts = await getAllPost();
-  console.log(posts);
+
+  // Convert the uploadedAt property to a formatted date string
+  const formattedPosts = posts.map((post) => ({
+    imageUrl: post.imageUrl,
+    username: post.username,
+    model: post.model,
+    prompt: post.prompt,
+    negativePrompt: post.negativePrompt,
+    uploadedAt: formatDistanceToNow(
+      post.uploadedAt.seconds * 1000 || new Date(),
+      { addSuffix: true }
+    ),
+  }));
+
   return (
     <section>
       <div className="m-10 border-b-2 border-gray-800 py-3 flex justify-between items-center">
@@ -38,7 +51,7 @@ const Showcase = async () => {
         </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-10">
-        {posts.map((post, i) => (
+        {formattedPosts.map((post, i) => (
           <ShowcaseCard
             post={{
               imageUrl: post.imageUrl,
@@ -49,6 +62,7 @@ const Showcase = async () => {
               uploadedAt: post.uploadedAt,
             }}
             index={i}
+            key={i}
           />
         ))}
       </div>

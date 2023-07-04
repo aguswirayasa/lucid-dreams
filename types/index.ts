@@ -38,5 +38,5 @@ export interface ShowcaseProps {
   model: string;
   prompt: string;
   negativePrompt: string;
-  uploadedAt: Timestamp;
+  uploadedAt: string;
 }

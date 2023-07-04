@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${jetbrain.className} bg-gray-900 text-white `}>
+      <body className={`${jetbrain.className} bg-primary text-white `}>
         <Navbar />
         <main>{children}</main>
       </body>

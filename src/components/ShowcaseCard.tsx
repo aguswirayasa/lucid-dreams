@@ -25,18 +25,13 @@ const ShowcaseCard = ({ post, index }: CardProps) => {
         className="w-full h-auto transition-transform duration-300 transform hover:scale-105"
       />
 
-      <div className="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-90 p-4 transition-transform duration-300 transform-gpu translate-y-full group-hover:translate-y-0">
+      <div className="absolute inset-x-0 bottom-0 bg-primary bg-opacity-90 p-4 transition-transform duration-300 transform-gpu translate-y-full group-hover:translate-y-0">
         <span className="flex justify-between items-center">
           <h3 className="text-xl text-teal-500 font-bold mb-2">
             {post.username}
           </h3>
           <p className="text-xs text-white/50 font-semibold">
-            {formatDistanceToNow(
-              post.uploadedAt && post.uploadedAt.seconds
-                ? post.uploadedAt.seconds * 1000
-                : new Date(),
-              { addSuffix: true }
-            )}
+            {post.uploadedAt}
           </p>
         </span>
         <ul>
