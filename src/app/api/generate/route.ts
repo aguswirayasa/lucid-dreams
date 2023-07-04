@@ -54,6 +54,38 @@ export async function POST(request: NextRequest) {
 
     // Check the actual structure of the responseData object
     console.log(responseData);
+    if (responseData?.status === "processing") {
+      console.log("inside processing with ID:" + responseData.id);
+      const url = await fetch(
+        "https://stablediffusionapi.com/api/v4/dreambooth/fetch",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            key: process.env.DIFFUSSION_API_SECRET,
+            request_id: responseData?.id,
+          }),
+        }
+      );
+      const urlData = await url.json();
+      console.log(urlData);
+      // Adjust the following lines based on the actual response structure
+      const images = {
+        prompt: responseData?.meta?.prompt || "",
+        negativePrompt: responseData?.meta?.negative_prompt || "",
+        output: urlData?.output?.[0] || "",
+        model: responseData?.meta?.model_id || "",
+        links: "",
+        error: responseData?.message || "", // Set 'error' to undefined in the success case
+      };
+      console.log(images);
+      return new NextResponse(JSON.stringify(images), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     // Adjust the following lines based on the actual response structure
     const images = {
