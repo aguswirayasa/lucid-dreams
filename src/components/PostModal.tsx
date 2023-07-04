@@ -20,22 +20,27 @@ const PostModal = ({
     setApiDataReceived(false);
     setIsLoading(true);
     let image = "";
-    if (output) {
-      image = await convertToBase64(output);
-    } else {
-      image = await convertToBase64(links);
+    try {
+      if (output) {
+        image = await convertToBase64(output);
+      } else {
+        image = await convertToBase64(links);
+      }
+      const post = {
+        username: username,
+        imageUrl: image,
+        prompt: prompt,
+        negativePrompt: negativePrompt,
+        model: model,
+      };
+      const data = await postImage(post);
+      setApiData(data);
+      setApiDataReceived(true);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
     }
-    const post = {
-      username: username,
-      imageUrl: image,
-      prompt: prompt,
-      negativePrompt: negativePrompt,
-      model: model,
-    };
-    const data = await postImage(post);
-    setApiData(data);
-    setApiDataReceived(true);
-    setIsLoading(false);
   };
   return (
     <Dialog.Root>
