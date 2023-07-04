@@ -50,10 +50,6 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    if (!response.ok) {
-      throw new Error("An error occurred while making the API request");
-    }
-
     const responseData = await response.json();
 
     // Check the actual structure of the responseData object
