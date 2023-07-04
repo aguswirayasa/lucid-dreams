@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   }
 
   const diffusionRequest = {
-    key: "8wj7V62AZwcmgjoi94rEFMAh3OxNd22hyHo75vHrGoRIL2DOy2MwXZiAGM0o",
+    key: process.env.DIFFUSSION_API_SECRET,
     prompt,
     negative_prompt: negativePrompt,
     model_id: "anything-v4",
