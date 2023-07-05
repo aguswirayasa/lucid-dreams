@@ -1,11 +1,21 @@
 import React from "react";
 import { DiffussionResponse } from "../../types";
 import PostModal from "./PostModal";
+import axios from "axios";
+import Image from "next/image";
 
 interface ImageCardProps {
   image: DiffussionResponse;
 }
-const ImageCard = ({ image }: ImageCardProps) => {
+const ImageCard = async ({ image }: ImageCardProps) => {
+  async function fetchQueue(id: number) {
+    const response = await axios.post(
+      `https://stablediffusionapi.com/api/v3/fetch/${id}`,
+      { key: process.env.DIFFUSSION_API_SECRET },
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response?.data?.output?.[0];
+  }
   if (!image) {
     // Handle the case where image is null
     return (
@@ -31,25 +41,30 @@ const ImageCard = ({ image }: ImageCardProps) => {
       </div>
     );
   }
-  const { output, links, prompt, negativePrompt, error, model } = image;
-  const isOutputEmpty = output === "" ? true : false;
+  let { output, prompt, negativePrompt, error, model, status, id } = image;
+  let isLoading = false;
+  if (status === "processing") {
+    isLoading = true;
+    output = await fetchQueue(id);
+    isLoading = false;
+    status = "success";
+  }
   return (
     <div className="grid place-items-center  xl:flex gap-3 ">
-      {links && (
-        <img
-          className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg"
-          src={links}
-          alt="Image Preview"
-        />
-      )}
-      {output && (
-        <img
+      {isLoading ? (
+        <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
+          Processing...
+        </div>
+      ) : (
+        <Image
           className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg"
           src={output}
+          width={512}
+          height={512}
           alt="Image Preview"
         />
       )}
-      {!output && !links && (
+      {!output && (
         <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
           Image Preview
         </div>
@@ -79,7 +94,6 @@ const ImageCard = ({ image }: ImageCardProps) => {
             </li>
             <li className="mb-3  p-3 w-full  xl:max-w-xs  xl:w-80 ">
               <PostModal
-                links={links}
                 model={model}
                 negativePrompt={negativePrompt}
                 output={output}

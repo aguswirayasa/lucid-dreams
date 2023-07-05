@@ -7,7 +7,6 @@ import PostToast from "./PostToast";
 import { PostModalProps } from "../../types";
 const PostModal = ({
   output,
-  links,
   prompt,
   negativePrompt,
   model,
@@ -23,8 +22,6 @@ const PostModal = ({
     try {
       if (output) {
         image = await convertToBase64(output);
-      } else {
-        image = await convertToBase64(links);
       }
       const post = {
         username: username,

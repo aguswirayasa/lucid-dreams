@@ -1,5 +1,8 @@
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
-
+export const config = {
+  runtime: "edge", // for Edge API Routes only
+};
 export async function POST(request: NextRequest) {
   const { prompt, negativePrompt } = await request.json();
 
@@ -11,6 +14,8 @@ export async function POST(request: NextRequest) {
       model: "",
       links: "",
       error: "Prompt is empty", // Set 'error' to undefined in the success case
+      id: 0, // Set 'error' to undefined in the success case
+      status: "error", // Set 'error' to undefined in the success case
     };
     return new NextResponse(JSON.stringify(images), {
       headers: { "Content-Type": "application/json" },
@@ -39,62 +44,23 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    const response = await fetch(
+    const response = await axios.post(
       "https://stablediffusionapi.com/api/v4/dreambooth",
-      {
-        method: "POST",
-        body: JSON.stringify(diffusionRequest),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      diffusionRequest,
+      { headers: { "Content-Type": "application/json" } }
     );
 
-    const responseData = await response.json();
-
-    // Check the actual structure of the responseData object
+    const responseData = response.data;
     console.log(responseData);
-    if (responseData?.status === "processing") {
-      console.log("inside processing with ID:" + responseData.id);
-      const url = await fetch(
-        "https://stablediffusionapi.com/api/v4/dreambooth/fetch",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            key: process.env.DIFFUSSION_API_SECRET,
-            request_id: responseData?.id,
-          }),
-        }
-      );
-      const urlData = await url.json();
-      console.log(urlData);
-      // Adjust the following lines based on the actual response structure
-      const images = {
-        prompt: responseData?.meta?.prompt || "",
-        negativePrompt: responseData?.meta?.negative_prompt || "",
-        output: urlData?.output?.[0] || "",
-        model: responseData?.meta?.model_id || "",
-        links: "",
-        error: responseData?.message || "", // Set 'error' to undefined in the success case
-      };
-      console.log(images);
-      return new NextResponse(JSON.stringify(images), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
     // Adjust the following lines based on the actual response structure
     const images = {
       prompt: responseData?.meta?.prompt || "",
       negativePrompt: responseData?.meta?.negative_prompt || "",
       output: responseData?.output?.[0] || "",
       model: responseData?.meta?.model_id || "",
-      links: responseData?.future_links?.[0] || "",
       error: responseData?.message || "", // Set 'error' to undefined in the success case
+      id: responseData?.id || "",
+      status: responseData?.status || "",
     };
 
     console.log(images);
@@ -108,8 +74,9 @@ export async function POST(request: NextRequest) {
       negativePrompt: "",
       output: "",
       model: "",
-      links: "",
       error: "An error occurred while making the API request", // Set 'error' to undefined in the success case
+      id: "",
+      status: "error",
     };
     return new NextResponse(JSON.stringify(images), {
       headers: { "Content-Type": "application/json" },

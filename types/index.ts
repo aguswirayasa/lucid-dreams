@@ -12,8 +12,9 @@ export interface DiffussionResponse {
   prompt: string;
   negativePrompt: string;
   model: string;
-  links: string;
   error: string;
+  id: number;
+  status: string;
 }
 
 export interface PostProps {
@@ -26,7 +27,6 @@ export interface PostProps {
 
 export interface PostModalProps {
   output: string;
-  links: string;
   prompt: string;
   negativePrompt: string;
   model: string;
