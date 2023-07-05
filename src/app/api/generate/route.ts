@@ -1,6 +1,5 @@
-import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
-export const runtime = "edge";
+
 export async function POST(request: NextRequest) {
   const { prompt, negativePrompt } = await request.json();
 
@@ -42,14 +41,19 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    const response = await axios.post(
+    const response = await fetch(
       "https://stablediffusionapi.com/api/v4/dreambooth",
-      diffusionRequest,
-      { headers: { "Content-Type": "application/json" } }
+      {
+        method: "POST",
+        body: JSON.stringify(diffusionRequest),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
-    const responseData = response.data;
-    console.log(responseData);
+    const responseData = await response.json();
+
     // Adjust the following lines based on the actual response structure
     const images = {
       prompt: responseData?.meta?.prompt || "",
@@ -61,12 +65,10 @@ export async function POST(request: NextRequest) {
       status: responseData?.status || "",
     };
 
-    console.log(images);
     return new NextResponse(JSON.stringify(images), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error(error);
     const images = {
       prompt: "",
       negativePrompt: "",
