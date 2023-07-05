@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { firestore } from "../../../../firebase/firebase";
 import { cloudinary } from "../../../../cloudinary.config";
-export const config = {
-  runtime: "edge",
-};
+
 export async function POST(request: NextRequest) {
   const { postData } = await request.json();
   const { imageUrl, username, prompt, negativePrompt, model } = postData;
