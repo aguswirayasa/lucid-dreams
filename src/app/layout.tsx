@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import "./globals.css";
 import { JetBrains_Mono } from "next/font/google";
-import Loading from "./playground/loading";
 import Navbar from "@/components/Navbar";
 
 const jetbrain = JetBrains_Mono({ subsets: ["latin"] });

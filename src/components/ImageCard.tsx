@@ -1,21 +1,42 @@
+"use client";
 import React from "react";
 import { DiffussionResponse } from "../../types";
 import PostModal from "./PostModal";
-import axios from "axios";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface ImageCardProps {
   image: DiffussionResponse;
 }
+
 const ImageCard = async ({ image }: ImageCardProps) => {
-  async function fetchQueue(id: number) {
-    const response = await axios.post(
-      `https://stablediffusionapi.com/api/v3/fetch/${id}`,
-      { key: process.env.DIFFUSSION_API_SECRET },
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response?.data?.output?.[0];
-  }
+  const [output, setOutput] = useState(image?.output || "/loading.jpg");
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (image && image.status === "processing") {
+      axios
+        .post(
+          "/api/queue",
+          { id: image?.id },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then((result) => {
+          setOutput(result?.data?.output?.[0]);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setErrorMessage(error);
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(false);
+    }
+  }, [image]);
+
   if (!image) {
     // Handle the case where image is null
     return (
@@ -41,29 +62,30 @@ const ImageCard = async ({ image }: ImageCardProps) => {
       </div>
     );
   }
-  let { output, prompt, negativePrompt, error, model, status, id } = image;
-  let isLoading = false;
-  if (status === "processing") {
-    isLoading = true;
-    output = await fetchQueue(id);
-    isLoading = false;
-    status = "success";
-  }
+
+  let { prompt, negativePrompt, error, model, status, id } = image;
+
   return (
     <div className="grid place-items-center  xl:flex gap-3 ">
       {isLoading ? (
-        <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
-          Processing...
+        <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg animate-pulse">
+          Your image is still processing, high quality image might take sometime
+          to finish
+        </div>
+      ) : errorMessage ? (
+        <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg ">
+          Something went wrong, please try again.
         </div>
       ) : (
         <Image
-          className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg"
+          className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg"
           src={output}
           width={512}
           height={512}
           alt="Image Preview"
         />
       )}
+
       {!output && (
         <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
           Image Preview

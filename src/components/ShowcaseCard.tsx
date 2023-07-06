@@ -2,7 +2,6 @@
 import React from "react";
 import Image from "next/image";
 import { ShowcaseProps } from "../../types";
-import { formatDistanceToNow } from "date-fns";
 interface CardProps {
   post: ShowcaseProps;
   index: number;
