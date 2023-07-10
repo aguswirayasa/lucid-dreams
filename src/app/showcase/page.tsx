@@ -9,7 +9,9 @@ const Showcase = async () => {
   async function getAllPost() {
     "use server";
     // Access the "userImages" collection in Firestore
-    const userImagesCollection = firestore.collection("userImages");
+    const userImagesCollection = firestore
+      .collection("userImages")
+      .orderBy("uploadedAt", "desc");
 
     // Fetch all documents in the "userImages" collection
     const snapshot = await userImagesCollection.get();

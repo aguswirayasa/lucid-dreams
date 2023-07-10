@@ -19,9 +19,12 @@ const Main = () => {
         <div className="grid w-full  xl:col-span-8 place-items-center gap-3">
           {isLoading ? (
             <>
-              <div className="grid xl:col-span-8 place-items-center gap-3">
+              <div className="grid xl:col-span-8 place-items-center gap-3 animate-pulse">
                 <div className="flex gap-3">
-                  <div className="bg-gray-700 loading-animation h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg"></div>
+                  <div className="bg-gray-700 loading-animation grid place-items-center text-center h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg">
+                    <span className="loader"></span>
+                    <p>Loading...</p>
+                  </div>
 
                   <ul>
                     <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full xl:max-w-xs xl:w-80 shadow-md loading-animation"></li>

@@ -9,7 +9,10 @@ const Loading = () => {
             <div
               style={{ height: "512px", width: "512px" }}
               className="bg-gray-700 "
-            ></div>
+            >
+              <span className="loader"></span>
+              Loading...
+            </div>
 
             <ul>
               <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 max-w-xs w-80 shadow-md">

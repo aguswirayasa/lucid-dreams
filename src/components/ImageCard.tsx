@@ -10,28 +10,43 @@ interface ImageCardProps {
   image: DiffussionResponse;
 }
 
-const ImageCard = async ({ image }: ImageCardProps) => {
-  const [output, setOutput] = useState(image?.output || "/loading.jpg");
-  const [isLoading, setIsLoading] = useState(true);
+const ImageCard: React.FC<ImageCardProps> = ({ image }) => {
+  const [output, setOutput] = useState<string>(image?.output || "/loading.jpg");
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const fetchQueue = async (id: number) => {
+    setIsLoading(true);
+
+    while (true) {
+      try {
+        const response = await axios.post(
+          "/api/queue",
+          { id },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const result = response?.data?.output;
+        const newStatus = response?.data?.status;
+        setOutput(result);
+        if (newStatus !== "processing") {
+          break;
+        }
+      } catch (error) {
+        console.error(error);
+        setErrorMessage("Something went wrong. Please try again.");
+        setIsLoading(false);
+        break;
+      }
+
+      // Delay for 20 seconds (20000 milliseconds)
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+    }
+
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     if (image && image.status === "processing") {
-      axios
-        .post(
-          "/api/queue",
-          { id: image?.id },
-          { headers: { "Content-Type": "application/json" } }
-        )
-        .then((result) => {
-          setOutput(result?.data?.output?.[0]);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          setErrorMessage(error);
-          setIsLoading(false);
-        });
+      fetchQueue(image.id);
     } else {
       setIsLoading(false);
     }
@@ -57,20 +72,25 @@ const ImageCard = async ({ image }: ImageCardProps) => {
               {" "}
               <p>Model:</p>
             </li>
+            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full  xl:max-w-xs  xl:w-80 shadow-md">
+              {" "}
+              <p>Seed:</p>
+            </li>
           </ul>
         </div>
       </div>
     );
   }
 
-  let { prompt, negativePrompt, error, model, status, id } = image;
+  let { prompt, negativePrompt, error, model, seed } = image;
 
   return (
     <div className="grid place-items-center  xl:flex gap-3 ">
       {isLoading ? (
-        <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg animate-pulse">
+        <div className="bg-gray-700 grid place-items-center text-2xl border-2 text-center border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg animate-pulse">
           Your image is still processing, high quality image might take sometime
           to finish
+          <span className="loader"></span>
         </div>
       ) : errorMessage ? (
         <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg ">
@@ -84,12 +104,6 @@ const ImageCard = async ({ image }: ImageCardProps) => {
           height={512}
           alt="Image Preview"
         />
-      )}
-
-      {!output && (
-        <div className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
-          Image Preview
-        </div>
       )}
 
       <ul>
@@ -106,14 +120,58 @@ const ImageCard = async ({ image }: ImageCardProps) => {
             </li>
             <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full  xl:max-w-xs  xl:w-80 shadow-md">
               <p>
-                <b>Prompt:</b> {prompt}
+                <b>Seed:</b> {seed}
               </p>
             </li>
-            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full  xl:max-w-xs  xl:w-80 shadow-md">
+            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full xl:max-w-xs xl:w-80 shadow-md">
               <p>
-                <b>Negative Prompt:</b> {negativePrompt}
+                <b>Prompt:</b>{" "}
+                {prompt.length > 50 ? (
+                  <>
+                    {prompt.slice(0, 50)}
+                    <span>
+                      ...{" "}
+                      <button
+                        onClick={() => {
+                          // Handle the "View More" click event
+                          console.log("View More clicked");
+                        }}
+                        className="text-teal-400 underline cursor-pointer"
+                      >
+                        View More
+                      </button>
+                    </span>
+                  </>
+                ) : (
+                  prompt
+                )}
               </p>
             </li>
+            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full xl:max-w-xs xl:w-80 shadow-md">
+              <p>
+                <b>Negative Prompt:</b>{" "}
+                {negativePrompt.length > 50 ? (
+                  <>
+                    {negativePrompt.slice(0, 50)}
+                    <span>
+                      ...{" "}
+                      <button
+                        onClick={() => {
+                          // Handle the "View More" click event
+                          console.log("View More clicked");
+                        }}
+                        className="text-teal-400 underline cursor-pointer"
+                      >
+                        View More
+                      </button>
+                    </span>
+                  </>
+                ) : (
+                  negativePrompt
+                )}
+              </p>
+            </li>
+
             <li className="mb-3  p-3 w-full  xl:max-w-xs  xl:w-80 ">
               <PostModal
                 model={model}

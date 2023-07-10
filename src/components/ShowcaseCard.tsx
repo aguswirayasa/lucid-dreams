@@ -39,7 +39,7 @@ const ShowcaseCard = ({ post, index }: CardProps) => {
               <span className="font-semibold">Model:</span> {post.model}
             </p>
           </li>
-          <li className="border-b-2 border-teal-600 my-2">
+          <li className="border-b-2 border-teal-600 my-2 max-h-44 overflow-y-auto">
             <p className="text-sm text-white font-semibold">Prompt: </p>
             <p className="text-sm text-white">
               {showFullPrompt ? (
@@ -54,7 +54,7 @@ const ShowcaseCard = ({ post, index }: CardProps) => {
                 </>
               ) : (
                 <>
-                  {post.prompt.slice(0, post.prompt.length / 2)}
+                  {post.prompt.slice(0, 50)}
                   {post.prompt.length > 50 && "... "}
                   <button
                     className="px-2 text-teal-500"
@@ -66,7 +66,7 @@ const ShowcaseCard = ({ post, index }: CardProps) => {
               )}
             </p>
           </li>
-          <li className="border-b-2 border-teal-600 my-2">
+          <li className="border-b-2 border-teal-600 my-2 max-h-44 overflow-y-auto ">
             <p className="text-sm text-white font-semibold">Negative Prompt:</p>
             <p className="text-sm text-white ">
               {showFullNegativePrompt ? (
@@ -81,7 +81,7 @@ const ShowcaseCard = ({ post, index }: CardProps) => {
                 </>
               ) : (
                 <>
-                  {post.negativePrompt.slice(0, post.negativePrompt.length / 2)}
+                  {post.negativePrompt.slice(0, 50)}
                   {post.negativePrompt.length > 50 && "... "}
                   <button
                     className="px-2 text-teal-500"

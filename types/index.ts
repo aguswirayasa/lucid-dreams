@@ -15,6 +15,7 @@ export interface DiffussionResponse {
   error: string;
   id: number;
   status: string;
+  seed: number;
 }
 
 export interface PostProps {
