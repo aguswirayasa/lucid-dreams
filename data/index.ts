@@ -27,6 +27,14 @@ export const ApiModels = [
     id: "abyssorangemix2nsfw",
     name: "AbyssOrangeMix2",
   },
+  {
+    id: "dark-sushi-25d",
+    name: "Dark Sushi 2.5D",
+  },
+  {
+    id: "meinapastel",
+    name: "MeinaPastel",
+  },
 ];
 
 export const randoms = [
