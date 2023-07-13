@@ -98,9 +98,9 @@ const ImageCard: React.FC<ImageCardProps> = ({ image }) => {
         </div>
       ) : (
         <Image
-          className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg"
+          className="bg-gray-700 grid place-items-center text-2xl border-2 border-teal-400 m-4 xl:m-0 w-[512px] lg:max-w-3xl"
           src={output}
-          width={512}
+          width={768}
           height={512}
           alt="Image Preview"
         />

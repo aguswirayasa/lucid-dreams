@@ -2,12 +2,13 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
+
 import React from "react";
 
 const Navbar = () => {
   return (
     <NavigationMenu.Root
-      className="bg-gray-950 text-teal-500 flex justify-between items-center px-10 py-2"
+      className="bg-gray-950 text-teal-500 flex justify-between items-center px-5 md:px-10 py-2"
       orientation="horizontal"
     >
       <NavigationMenu.List>
@@ -22,17 +23,17 @@ const Navbar = () => {
           </Link>
         </NavigationMenu.Item>
       </NavigationMenu.List>
-      <NavigationMenu.List className="flex justify-between items-center gap-6">
+      <NavigationMenu.List className="flex justify-between items-center gap-3 md:gap-6">
         <NavigationMenu.Item>
           <Link href={"/showcase"}>
-            <p className="text-lg font-bold hover:text-white hover:border-b-2 border-teal-500 hover:scale-105 transition-all duration-200  ease-in-out">
+            <p className="text-base md:text-lg font-bold  hover:text-white hover:border-b-2 border-teal-500 hover:scale-105 transition-all duration-200  ease-in-out">
               Showcase
             </p>
           </Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item>
           <Link href={"/playground"}>
-            <p className="text-lg font-bold hover:text-white hover:border-b-2 border-teal-500 hover:scale-105 transition-all duration-200  ease-in-out">
+            <p className="text-base md:text-lg font-bold  hover:text-white hover:border-b-2 border-teal-500 hover:scale-105 transition-all duration-200  ease-in-out">
               Playground
             </p>
           </Link>

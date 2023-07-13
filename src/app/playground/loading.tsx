@@ -8,7 +8,7 @@ const Loading = () => {
           <div className="flex gap-3">
             <div
               style={{ height: "512px", width: "512px" }}
-              className="bg-gray-700 "
+              className="bg-gray-700 grid place-items-center"
             >
               <span className="loader"></span>
               Loading...

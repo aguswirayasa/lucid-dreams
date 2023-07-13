@@ -1,23 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 export const runtime = "edge";
 export async function POST(request: NextRequest) {
-  const { prompt, negativePrompt, model, seed } = await request.json();
+  const { prompt, negativePrompt, model, seed, size } = await request.json();
 
   if (!prompt) {
-    const images = {
-      prompt: "",
-      negativePrompt: "",
-      output: "",
-      model: "",
-      links: "",
-      error: "Prompt is empty", // Set 'error' to undefined in the success case
-      id: 0, // Set 'error' to undefined in the success case
-      status: "error", // Set 'error' to undefined in the success case
-      seed: 0,
-    };
-    return new NextResponse(JSON.stringify(images), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: "propmt is required" }, { status: 400 });
+  }
+  const width =
+    size === "NORMAL"
+      ? 512
+      : size === "PORTRAIT"
+      ? 512
+      : size === "LANDSCAPE"
+      ? 768
+      : null;
+  const height =
+    size === "NORMAL"
+      ? 512
+      : size === "PORTRAIT"
+      ? 768
+      : size === "LANDSCAPE"
+      ? 512
+      : null;
+  if (!width || !height) {
+    return NextResponse.json({ error: "size is required" }, { status: 400 });
   }
 
   const diffusionRequest = {
@@ -28,11 +34,13 @@ export async function POST(request: NextRequest) {
     multi_lingual: null,
     panorama: null,
     self_attention: "yes",
-    width: "512",
+    width: width,
     guidance: "7.5",
-    height: "512",
+    height: height,
     samples: 1,
     safety_checker: null,
+    use_karras_sigmas: true,
+    upscale: 2,
     steps: 20,
     seed: seed ? parseInt(seed) : null,
     enhance_prompt: "no",

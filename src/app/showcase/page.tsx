@@ -41,13 +41,13 @@ const Showcase = async () => {
     <section>
       <div className="m-10 border-b-2 border-gray-800 py-3 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold">Community Showcase</h1>
-          <p className="text-xl font-semibold text-teal-500 ">
+          <h1 className="text-3xl md:text-4xl font-bold">Community Showcase</h1>
+          <p className="text-lg md:text-xl font-semibold text-teal-500 ">
             Find out what other dreaming about!
           </p>
         </div>
         <Link href={"/playground"}>
-          <button className="px-3 py-2 border-2 border-teal-500  rounded-md hover:bg-teal-700 transition-colors duration-300 ease-in-out">
+          <button className="text-sm md:text-lg px-3 md:py-2 border-2 border-teal-500  rounded-md hover:bg-teal-700 transition-colors duration-300 ease-in-out">
             Manifest Your Dreams
           </button>
         </Link>

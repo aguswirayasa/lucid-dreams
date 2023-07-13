@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setData, setError } from "../app/store/promptSlice";
 import { useMutation } from "react-query";
-import { randoms, ApiModels } from "../../data";
+import { randoms, ApiModels, sizes } from "../../libs/data";
 import Image from "next/image";
 
 type FormData = {
@@ -12,12 +12,17 @@ type FormData = {
   negativePrompt: string;
   seed: string;
   model: string;
+  size: string;
 };
 
 const PromptForm = ({ startLoading, finishLoading }: any) => {
   const { register, handleSubmit } = useForm<FormData>();
   const [prompt, setPrompt] = useState<string>("");
   const [negativePrompt, setNegativePrompt] = useState<string>("");
+  const [selectedModel, setSelectedModel] = useState({
+    name: "meinapastel",
+    url: "https://res.cloudinary.com/drqn4yupq/image/upload/v1689260778/U2zJ0M5q_2x_wub4wu.png",
+  });
   const dispatch = useDispatch();
   const handleRandomize = () => {
     const randomNumber = Math.floor(Math.random() * 10) + 1;
@@ -57,6 +62,13 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
     mutation.mutate(data);
   });
 
+  const handleOnChange = (name: string, url: string) => {
+    setSelectedModel({
+      name,
+      url,
+    });
+  };
+
   return (
     <div className="grid gap-3 max-h-[500px] overflow-y-auto">
       <form
@@ -84,27 +96,68 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
           />
         </div>
         <div className="grid place-items-center w-full md:w-4/5 xl:w-full text-left">
+          <label className="w-full font-bold">Size</label>
+          <select
+            {...register("size", { required: true })}
+            className="text-white p-3 bg-gray-800 rounded-md drop-shadow-md w-full font-sans"
+          >
+            {sizes.map((size, index) => {
+              return (
+                <option key={index} value={size.value}>
+                  {size.label}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div className="grid gap-3">
+          <label className="w-full font-bold">Model</label>
+          <span className="w-full bg-gray-600 rounded-lg p-3 flex justify-start items-center gap-3">
+            <Image
+              src={selectedModel.url}
+              width={65}
+              height={65}
+              loading="lazy"
+              alt={selectedModel.name}
+              className="rounded-lg"
+            />
+            <p className="text-lg font-bold">{selectedModel.name}</p>
+          </span>
+          <div className="flex flex-wrap w-full justify-start gap-4">
+            {ApiModels.map((model) => (
+              <label
+                key={model.id}
+                className="flex flex-col items-center max-w-[110px] mx-2"
+              >
+                <Image
+                  src={model.imageUrl}
+                  alt={model.name}
+                  width={65}
+                  height={65}
+                  loading="lazy"
+                  className="rounded-lg"
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    {...register("model", { required: true })}
+                    value={model.id}
+                    defaultChecked={model.id === "meinapastel"}
+                    onChange={() => handleOnChange(model.name, model.imageUrl)}
+                  />
+                  <span className="text-sm">{model.name}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="grid place-items-center w-full md:w-4/5 xl:w-full text-left">
           <label className="w-full font-bold">Seed (optional)</label>
           <input
             {...register("seed")}
             type="text"
             className="text-white p-3 bg-gray-800 rounded-md drop-shadow-md w-full"
           />
-        </div>
-        <div className="grid place-items-center w-full md:w-4/5 xl:w-full text-left">
-          <label className="w-full font-bold">Model</label>
-          <select
-            {...register("model", { required: true })}
-            className="text-white p-3 bg-gray-800 rounded-md drop-shadow-md w-full font-sans"
-          >
-            {ApiModels.map((model, index) => {
-              return (
-                <option key={index} value={model.id}>
-                  {model.name}
-                </option>
-              );
-            })}
-          </select>
         </div>
         <div className="grid place-items-center w-full md:w-4/5 xl:w-full text-left">
           <button

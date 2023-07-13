@@ -22,8 +22,8 @@ const Main = () => {
               <div className="grid xl:col-span-8 place-items-center gap-3 animate-pulse">
                 <div className="flex gap-3">
                   <div className="bg-gray-700 loading-animation grid place-items-center text-center h-image-sm w-image-sm xl:w-image-lg xl:h-image-lg">
+                    Loading...
                     <span className="loader"></span>
-                    <p>Loading...</p>
                   </div>
 
                   <ul>
