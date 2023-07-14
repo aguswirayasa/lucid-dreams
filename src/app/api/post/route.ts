@@ -5,10 +5,11 @@ import { cloudinary } from "../../../../cloudinary.config";
 export async function POST(request: NextRequest) {
   const { postData } = await request.json();
   const { imageUrl, username, prompt, negativePrompt, model } = postData;
+  console.log(imageUrl);
   try {
     // Upload the Base64 image to Cloudinary
     const uploadResult = await cloudinary.uploader.upload(imageUrl, {
-      resource_type: "auto",
+      resource_type: "image",
     });
 
     // Access the uploaded image URL from Cloudinary

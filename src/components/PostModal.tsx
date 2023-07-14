@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { convertToBase64, postImage } from "../../utils";
+import { postImage } from "../../utils";
 import PostToast from "./PostToast";
 import { PostModalProps } from "../../types";
 import { toast } from "react-hot-toast";
@@ -19,14 +19,10 @@ const PostModal = ({
   const handleButtonClick = async () => {
     setApiDataReceived(false);
     setIsLoading(true);
-    let image = "";
     try {
-      if (output) {
-        image = await convertToBase64(output);
-      }
       const post = {
         username: username,
-        imageUrl: image,
+        imageUrl: output,
         prompt: prompt,
         negativePrompt: negativePrompt,
         model: model,

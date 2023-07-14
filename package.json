@@ -23,6 +23,7 @@
     "cloudinary": "^1.37.3",
     "cloudinary-react": "^1.8.1",
     "date-fns": "^2.30.0",
+    "file-saver": "^2.0.5",
     "firebase": "^9.23.0",
     "framer-motion": "^10.12.18",
     "next": "13.4.7",
@@ -36,5 +37,8 @@
     "redux": "^4.2.1",
     "tailwindcss": "3.3.2",
     "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.5"
   }
 }

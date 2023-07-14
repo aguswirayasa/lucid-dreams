@@ -5,6 +5,8 @@ import PostModal from "./PostModal";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
+import { saveAs } from "file-saver";
 
 interface ImageCardProps {
   image: DiffussionResponse;
@@ -43,7 +45,24 @@ const ImageCard: React.FC<ImageCardProps> = ({ image }) => {
 
     setIsLoading(false);
   };
+  const handleDownload = async (e: any, fileUrl: string) => {
+    e.preventDefault();
 
+    try {
+      // Fetch the file from the server
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      // Use the 'file-saver' library to save the file
+      const date = Date.now().toString();
+      saveAs(blob, `dreams-${date}.png`);
+
+      toast.success("Image Downloaded!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to download the image.");
+    }
+  };
   useEffect(() => {
     if (image && image.status === "processing") {
       fetchQueue(image.id);
@@ -62,12 +81,6 @@ const ImageCard: React.FC<ImageCardProps> = ({ image }) => {
           </div>
 
           <ul>
-            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full  xl:max-w-xs  xl:w-80 shadow-md">
-              <p>Prompt:</p>
-            </li>
-            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full  xl:max-w-xs  xl:w-80 shadow-md">
-              <p>Negative Prompt:</p>
-            </li>
             <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full  xl:max-w-xs  xl:w-80 shadow-md">
               {" "}
               <p>Model:</p>
@@ -123,62 +136,20 @@ const ImageCard: React.FC<ImageCardProps> = ({ image }) => {
                 <b>Seed:</b> {seed}
               </p>
             </li>
-            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full xl:max-w-xs xl:w-80 shadow-md">
-              <p>
-                <b>Prompt:</b>{" "}
-                {prompt.length > 50 ? (
-                  <>
-                    {prompt.slice(0, 50)}
-                    <span>
-                      ...{" "}
-                      <button
-                        onClick={() => {
-                          // Handle the "View More" click event
-                          console.log("View More clicked");
-                        }}
-                        className="text-teal-400 underline cursor-pointer"
-                      >
-                        View More
-                      </button>
-                    </span>
-                  </>
-                ) : (
-                  prompt
-                )}
-              </p>
-            </li>
-            <li className="mb-3 bg-gray-800 rounded-md border-2 border-teal-400 p-3 w-full xl:max-w-xs xl:w-80 shadow-md">
-              <p>
-                <b>Negative Prompt:</b>{" "}
-                {negativePrompt.length > 50 ? (
-                  <>
-                    {negativePrompt.slice(0, 50)}
-                    <span>
-                      ...{" "}
-                      <button
-                        onClick={() => {
-                          // Handle the "View More" click event
-                          console.log("View More clicked");
-                        }}
-                        className="text-teal-400 underline cursor-pointer"
-                      >
-                        View More
-                      </button>
-                    </span>
-                  </>
-                ) : (
-                  negativePrompt
-                )}
-              </p>
-            </li>
 
-            <li className="mb-3  p-3 w-full  xl:max-w-xs  xl:w-80 ">
+            <li className="mb-3 grid gap-2  p-3 w-full  xl:max-w-xs  xl:w-80 ">
               <PostModal
                 model={model}
                 negativePrompt={negativePrompt}
                 output={output}
                 prompt={prompt}
               />
+              <button
+                onClick={(e) => handleDownload(e, output)}
+                className="text-violet w-full hover:bg-teal-700 inline-flex h-[35px] items-center justify-center rounded-[4px] bg-teal-500 px-[15px] font-medium leading-none transition-colors duration-300 ease-in-out"
+              >
+                Download
+              </button>
             </li>
           </>
         )}

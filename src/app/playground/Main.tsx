@@ -7,6 +7,7 @@ import { RootState } from "../store/promptSlice";
 const Main = () => {
   const { data, error } = useSelector((state: RootState) => state.prompt);
   const [isLoading, setIsLoading] = useState(false);
+
   const handleLoading = () => {
     setIsLoading(true);
   };
