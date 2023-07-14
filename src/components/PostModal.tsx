@@ -5,6 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { convertToBase64, postImage } from "../../utils";
 import PostToast from "./PostToast";
 import { PostModalProps } from "../../types";
+import { toast } from "react-hot-toast";
 const PostModal = ({
   output,
   prompt,
@@ -34,7 +35,8 @@ const PostModal = ({
       setApiData(data);
       setApiDataReceived(true);
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message);
       console.log(error);
       setIsLoading(false);
     }
