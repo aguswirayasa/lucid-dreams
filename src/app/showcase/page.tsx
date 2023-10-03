@@ -1,10 +1,8 @@
-"use server";
-
 import ShowcaseCard from "@/components/ShowcaseCard";
-import { firestore } from "../../../firebase/firebase";
+
 import Link from "next/link";
-import { format, formatDistanceToNow } from "date-fns";
-import { ShowcaseProps } from "../../../types";
+import { formatDistanceToNow } from "date-fns";
+import { firestore } from "../../../firebase/firebase";
 const Showcase = async () => {
   async function getAllPost() {
     "use server";
@@ -41,8 +39,8 @@ const Showcase = async () => {
     <section>
       <div className="m-10 border-b-2 border-gray-800 py-3 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold">Community Showcase</h1>
-          <p className="text-lg md:text-xl font-semibold text-teal-500 ">
+          <h1 className="text-xl md:text-4xl font-bold">Community Showcase</h1>
+          <p className="text-base md:text-xl font-semibold text-teal-500 ">
             Find out what other dreaming about!
           </p>
         </div>

@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setData, setError } from "../app/store/promptSlice";
 import { useMutation } from "react-query";
 import { randoms, ApiModels, sizes } from "../../libs/data";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 type FormData = {
   prompt: string;
@@ -16,7 +17,7 @@ type FormData = {
 };
 
 const PromptForm = ({ startLoading, finishLoading }: any) => {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, setValue, formState } = useForm<FormData>();
   const [prompt, setPrompt] = useState<string>("");
   const [negativePrompt, setNegativePrompt] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState({
@@ -29,6 +30,9 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
     const selectedModel = randoms[randomNumber - 1];
     setPrompt(selectedModel.prompt);
     setNegativePrompt(selectedModel.negative);
+    setValue("prompt", selectedModel.prompt);
+    setValue("negativePrompt", selectedModel.negative);
+    toast.success("Prompt Generated");
   };
 
   const mutation = useMutation(
@@ -117,7 +121,7 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
               src={selectedModel.url}
               width={65}
               height={65}
-              loading="lazy"
+              loading="eager"
               alt={selectedModel.name}
               className="rounded-lg"
             />
@@ -134,7 +138,7 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
                   alt={model.name}
                   width={65}
                   height={65}
-                  loading="lazy"
+                  loading="eager"
                   className="rounded-lg"
                 />
                 <div className="flex items-center gap-2">
@@ -142,8 +146,9 @@ const PromptForm = ({ startLoading, finishLoading }: any) => {
                     type="radio"
                     {...register("model", { required: true })}
                     value={model.id}
-                    defaultChecked={model.id === "meinapastel"}
-                    onChange={() => handleOnChange(model.name, model.imageUrl)}
+                    defaultChecked={true}
+                    defaultValue={"meinapastel"}
+                    onClick={() => handleOnChange(model.name, model.imageUrl)}
                   />
                   <span className="text-sm">{model.name}</span>
                 </div>

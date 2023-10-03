@@ -76,7 +76,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image }) => {
     return (
       <div className="grid   xl:col-span-8 place-items-center gap-3">
         <div className="flex flex-col  xl:flex-row gap-3 justify-items-center">
-          <div className="bg-gray-700 grid place-items-center text-2xl m-4  xl:m-0  h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
+          <div className="bg-gray-700 grid place-items-center text-2xl   h-image-sm w-image-sm  xl:w-image-lg  xl:h-image-lg">
             Image Preview
           </div>
 

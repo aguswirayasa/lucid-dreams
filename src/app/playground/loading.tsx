@@ -1,5 +1,5 @@
 import React from "react";
-import PromptForm from "../../components/PromptForm";
+
 const Loading = () => {
   return (
     <div className="grid place-items-center place-content-center min-h-screen">

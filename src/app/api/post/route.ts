@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     // Upload the Base64 image to Cloudinary
     const uploadResult = await cloudinary.uploader.upload(imageUrl, {
       resource_type: "image",
+      upload_preset: "lucid-dreams-preset",
     });
 
     // Access the uploaded image URL from Cloudinary
