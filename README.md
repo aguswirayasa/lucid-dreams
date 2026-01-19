@@ -1,4 +1,4 @@
-```markdown
+
 # Lucid Dreams 🌌
 
 > **Turn your dreams into reality with AI-generated anime art.**
